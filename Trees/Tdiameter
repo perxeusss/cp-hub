@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+using namespace std ;
+
+#define int long long 
+#define MOD 1000000007
+
+struct TreeDiameter {
+    int n;
+    vector<vector<pair<int, int>>> adj;
+
+    TreeDiameter(int _n): n(_n), adj(_n + 1) {}
+
+    void add_edge(int u, int v, int w = 1) {
+        adj[u].emplace_back(v, w);
+        adj[v].emplace_back(u, w);
+    }
+
+    vector<int> dfs_iter(int src) {
+        vector<int> dist(n + 1, 0), parent(n + 1, -1);
+        stack<int> st;
+        st.push(src);
+        parent[src] = src;
+
+        while (!st.empty()) {
+            int u = st.top(); st.pop();
+            for (auto &it : adj[u]) {
+                int v = it.first , w = it.second ;
+                if (parent[v] == -1) {
+                    parent[v] = u;
+                    dist[v] = dist[u] + w;
+                    st.push(v);
+                }
+            }
+            
+        }
+        return dist;
+    }
+    tuple<int, int, int> get_diameter() {
+        vector<int> dist1 = dfs_iter(1);
+        int A = max_element(dist1.begin() + 1, dist1.end()) - dist1.begin();
+
+        vector<int> distA = dfs_iter(A);
+        int B = max_element(distA.begin() + 1, distA.end()) - distA.begin();
+
+        int diameter_length = distA[B];
+        return {A, B, diameter_length};
+    }
+};
+
+
+int32_t main() {
+    ios::sync_with_stdio(false); cin.tie(nullptr); 
+
+
+}
